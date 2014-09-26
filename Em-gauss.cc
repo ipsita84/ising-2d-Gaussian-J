@@ -73,8 +73,8 @@ int main(int argc, char * argv[])
 	array_2d_real J_x(boost::extents[axis1][axis2]);
 	array_2d_real J_y(boost::extents[axis1][axis2]);
 	//Read the random signed bonds for a particular stored realization
-	ifstream gxin("Jx-32-gauss1.dat");
-	ifstream gyin("Jy-32-gauss1.dat");
+	ifstream gxin("Jx-32-gauss.dat");
+	ifstream gyin("Jy-32-gauss.dat");
 
 	for (unsigned int i = 0; i < axis1; ++i)
 	{
@@ -303,27 +303,6 @@ double nn_energy(array_2d sitespin, array_2d_real J_x, array_2d_real J_y, unsign
 	{
 		nn_en -= J_y[row][axis2-2] * sitespin[row][axis2-1] * sitespin[row][axis2-2];
 		nn_en -= J_y[row][axis2-1] * sitespin[row][axis2-1] * sitespin[row][0];
-	}
-
-	return nn_en;
-}
-
-	if (row == axis1-1)
-	{
-		nn_en -=J*J_x[axis1-2][col] * sitespin[axis1 - 1][col] * sitespin[axis1-2][col];
-		nn_en -=J*J_x[axis1-1][col] * sitespin[axis1-1][col] * sitespin[0][col];
-	}
-
-	if (col == 0)
-	{
-		nn_en -=J*J_y[row][axis2-1] * sitespin[row][0] * sitespin[row][axis2-1];
-		nn_en -= J*J_y[row][0] * sitespin[row][0] * sitespin[row][1];
-	}
-
-	if (col == axis2-1)
-	{
-		nn_en -=J*J_y[row][axis2-2] * sitespin[row][axis2-1] * sitespin[row][axis2-2];
-		nn_en -=J*J_y[row][axis2-1] * sitespin[row][axis2-1] * sitespin[row][0];
 	}
 
 	return nn_en;

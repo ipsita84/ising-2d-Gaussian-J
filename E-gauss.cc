@@ -49,8 +49,8 @@ int main(int argc, char const * argv[])
 	array_2d_real J_x(boost::extents[axis1][axis2]);
 	array_2d_real J_y(boost::extents[axis1][axis2]);
 	//Read the random signed bonds for a particular stored realization
-	ifstream gxin("Jx-32-gauss1.dat");
-	ifstream gyin("Jy-32-gauss1.dat");
+	ifstream gxin("Jx-32-gauss.dat");
+	ifstream gyin("Jy-32-gauss.dat");
 
 
 	for (unsigned int i = 0; i < axis1; ++i)
@@ -86,7 +86,7 @@ int main(int argc, char const * argv[])
 //	cout << "Enter increment of beta" << endl;
 //	cin >> del_beta;
 	ofstream fout("E-8.dat");	// Opens a file for output
-	ofstream gout("EA-8-1.dat");
+	ofstream gout("EA-8.dat");
 
 //      Create a 2d array that is axis1 * axis2
 	array_2d sitespin(boost::extents[axis1][axis2]);

@@ -51,6 +51,7 @@ int main(int argc, char const * argv[])
 		return 2;
 	}
 
+	beta_max += del_beta;
 //	cout << "Enter minimum beta" << endl;
 //	cin >> beta_min;
 //	cout << "Enter maximum beta" << endl;

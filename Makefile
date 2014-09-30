@@ -13,13 +13,16 @@
 # "make all" will compile all three source files and generate all
 # three binaries in one step.
 
-all: normal replica mutualinfo
+all: normal replica mutualinfo disorder
 
-normal: E-vs-beta-gauss.cc
-	g++ -Wall -O3 E-vs-gauss.cc -o normal
+disorder: disorder-realzn-GAUSS.o
+	g++ -Wall -O3 disorder-realzn-GAUSS.cc -o disorder
+
+normal: E-gauss.cc
+	g++ -Wall -O3 E-gauss.cc -o normal
 	
-replica: Em-vs-beta-gauss.cc
-	g++ -Wall -O3 Em-vs-beta-gauss.cc -o replica
+replica: Em-gauss.cc
+	g++ -Wall -O3 Em-gauss.cc -o replica
 
 mutualinfo: Mutual-info-vs-beta.cc
 	g++ -Wall -O3 \
@@ -29,4 +32,4 @@ mutualinfo: Mutual-info-vs-beta.cc
 .PHONY: clean
 
 clean:
-	rm -f normal replica mutualinfo *.o 
+	rm -f normal replica mutualinfo disorder *.o

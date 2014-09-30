@@ -9,7 +9,7 @@
 
 // gen is a variable name
 // Its data-type is boost::random::mt19937
-boost::random::mt19937 gen; //(std::time(0));
+boost::random::mt19937 gen(std::time(0));
 using namespace std;
 
 typedef

@@ -200,20 +200,28 @@ double energy_tot(array_2d sitespin,array_2d_real J_x, array_2d_real J_y)
 	{
 		for (unsigned int j = 0; j < axis2 - 1; ++j)
 		{
-			energy -= J_x[i][j]*sitespin[i][j]*sitespin[i+1][j];
-			energy -= J_y[i][j]*sitespin[i][j]*sitespin[i][j+1];
+			energy += J_x[i][j]*sitespin[i][j]*sitespin[i+1][j];
+			energy += J_y[i][j]*sitespin[i][j]*sitespin[i][j+1];
 		}
 	}
 
 	//periodic boundary conditions
-	for (unsigned int j = 0; j < axis2; ++j)
-		energy -=J_x[axis1-1][j]*sitespin[axis1-1][j] * sitespin[0][j];
+	for (unsigned int j = 0; j < axis2-1; ++j) // for i=axis1-1
+	 {energy += J_x[axis1-1][j]*sitespin[axis1-1][j] * sitespin[0][j];
+	  energy += J_y[axis1-1][j]*sitespin[axis1-1][j]*sitespin[axis1-1][j+1];
+	 }
 
-	for (unsigned int i = 0; i < axis1; ++i)
-		energy -=J_y[i][axis2-1]*sitespin[i][axis2-1] * sitespin[i][0];
+	for (unsigned int i = 0; i < axis1-1; ++i) // for j=axis2-1
+	 {energy += J_y[i][axis2-1]*sitespin[i][axis2-1] * sitespin[i][0];
+	  energy += J_x[i][axis2-1]*sitespin[i][axis2-1]*sitespin[i+1][axis2-1];
+	 }
 
+	energy += J_x[axis1-1][axis2-1]*sitespin[axis1-1][axis2-1]*sitespin[0][axis2-1];
+	energy += J_y[axis1-1][axis2-1]*sitespin[axis1-1][axis2-1]*sitespin[axis1-1][0];
+	
 	return energy;
 }
+
 
 //Calculating interaction energy change for spin
 //at random site->(row,col) with its nearest neighbours
@@ -223,35 +231,35 @@ double nn_energy(array_2d sitespin, array_2d_real J_x, array_2d_real J_y, unsign
 
 	if (row > 0 && row < axis1 - 1)
 	{
-	nn_en -= J_x[row-1][col] * sitespin[row][col] * sitespin[row-1][col];
-	nn_en -=J_x[row][col]*sitespin[row][col] * sitespin[row+1][col];
+	nn_en += J_x[row-1][col] * sitespin[row][col] * sitespin[row-1][col];
+	nn_en +=J_x[row][col]*sitespin[row][col] * sitespin[row+1][col];
 	}
 
 	if (col > 0 && col < axis2 - 1)
 	{
-	nn_en -= J_y[row][col-1]*sitespin[row][col] * sitespin[row][col-1];
-	nn_en -=J_y[row][col]*sitespin[row][col] * sitespin[row][col+1];
+	nn_en += J_y[row][col-1]*sitespin[row][col] * sitespin[row][col-1];
+	nn_en +=J_y[row][col]*sitespin[row][col] * sitespin[row][col+1];
 	}
 
 	if (row == 0)
-	{ nn_en -= J_x[axis1-1][col]*sitespin[0][col] * sitespin[axis1-1][col];
-	  nn_en -= J_x[0][col]* sitespin[0][col] * sitespin[1][col];
+	{ nn_en += J_x[axis1-1][col]*sitespin[0][col] * sitespin[axis1-1][col];
+	  nn_en += J_x[0][col]* sitespin[0][col] * sitespin[1][col];
 	}
 
 	if (row == axis1-1)
 	{
-	nn_en -=J_x[axis1-2][col]*sitespin[axis1-1][col] * sitespin[axis1-2][col];
-	nn_en -=J_x[axis1-1][col] * sitespin[axis1-1][col] * sitespin[0][col];
+	nn_en +=J_x[axis1-2][col]*sitespin[axis1-1][col] * sitespin[axis1-2][col];
+	nn_en +=J_x[axis1-1][col] * sitespin[axis1-1][col] * sitespin[0][col];
 	}
 
 	if (col == 0)
-	{nn_en -=J_y[row][axis2-1] * sitespin[row][0] * sitespin[row][axis2-1];
-	 nn_en -=J_y[row][0] * sitespin[row][0] * sitespin[row][1];
+	{nn_en +=J_y[row][axis2-1] * sitespin[row][0] * sitespin[row][axis2-1];
+	 nn_en +=J_y[row][0] * sitespin[row][0] * sitespin[row][1];
 	}
 
 	if (col == axis2-1)
-	{nn_en -=J_y[row][axis2-2]*sitespin[row][axis2-1] * sitespin[row][axis2-2];
-	 nn_en -=J_y[row][axis2-1] * sitespin[row][axis2-1] * sitespin[row][0];
+	{nn_en +=J_y[row][axis2-2]*sitespin[row][axis2-1] * sitespin[row][axis2-2];
+	 nn_en +=J_y[row][axis2-1] * sitespin[row][axis2-1] * sitespin[row][0];
 	}
 
 	return nn_en;

@@ -1,4 +1,4 @@
-// g++ -Wall -O3 E-gauss.cc -o normal
+//  g++ -Wall -O3 E-gauss.cc -o normal
 // Run with command line arguments, e.g. ./testo betamin betamax delbeta
 // Considering 2d ising model in zero magnetic field with random J sign
 //warming up system for first N_mc/10 loops

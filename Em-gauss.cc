@@ -1,4 +1,4 @@
-//  g++ -Wall -O3 Em-gauss.cc -o replica
+// g++ -Wall -O3 Em-gauss.cc -o replica
 // Run with command line arguments, e.g. ./testo betamin betamax delbeta
 
 // Chose same initial spin config. for both replicas

@@ -1,4 +1,4 @@
-//  g++ -Wall -O3 `pkg-config --cflags --libs gsl tabdatrw-0.3 interp2dpp` Mutual-info-vs-beta.cc -o mi
+//  g++ -Wall -O3 `pkg-config --cflags --libs gsl tabdatrw-0.4 interp2dpp` Mutual-info-vs-beta.cc -o mi
 // 2nd Renyi entropy for classical 2d Ising model in zero magnetic field
 //Metropolis algorithm employed
 

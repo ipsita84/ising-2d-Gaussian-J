@@ -37,7 +37,7 @@ int main()
 			J_x[i][j] = gaussian(0, 1) ;
 			J_y[i][j] = gaussian(0, 1) ;
 			fout<< J_x[i][j] << endl;
-			gout<< J_x[i][j] << endl;
+			gout<< J_y[i][j] << endl;
 		}
 	}
 

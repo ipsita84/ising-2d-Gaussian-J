@@ -15,7 +15,7 @@
 
 all: normal replica mutualinfo disorder
 
-disorder: disorder-realzn-GAUSS.o
+disorder: disorder-realzn-GAUSS.cc
 	g++ -Wall -O3 disorder-realzn-GAUSS.cc -o disorder
 
 normal: E-gauss.cc
@@ -26,7 +26,7 @@ replica: Em-gauss.cc
 
 mutualinfo: Mutual-info-vs-beta.cc
 	g++ -Wall -O3 \
-	`pkg-config --cflags --libs gsl tabdatrw-0.3 interp2dpp` \
+	`pkg-config --cflags --libs gsl tabdatrw-0.4 interp2dpp` \
 	Mutual-info-vs-beta.cc -o mutualinfo
 	
 .PHONY: clean

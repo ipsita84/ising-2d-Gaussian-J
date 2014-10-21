@@ -1,4 +1,4 @@
-//  g++ -Wall -O3 `pkg-config --cflags --libs gsl tabdatrw-0.3 interp2dpp` Mutual-info-vs-beta.cc -o testo
+//  g++ -Wall -O3 `pkg-config --cflags --libs gsl tabdatrw-0.4 interp2dpp` Mutual-info-vs-beta.cc -o mi
 // 2nd Renyi entropy for classical 2d Ising model in zero magnetic field
 //Metropolis algorithm employed
 
@@ -51,14 +51,9 @@ int main(int argc, char const * argv[])
 		return 2;
 	}
 
-//	cout << "Enter minimum beta" << endl;
-//	cin >> beta_min;
-//	cout << "Enter maximum beta" << endl;
-//	cin >> beta_max;
-//	cout << "Enter increment of beta at each step" << endl;
-//	cin >> del_beta;
+
 	double mut_info(0); //mutual information I_2
-	ofstream fout("I2-vs-beta-8.dat"); // Opens a file for output
+	ofstream fout("renyi-12.dat"); // Opens a file for output
 	vvdouble vm = tabdatr("Em-8.dat", 2);//modified energy data
 	interp_data idm(vm,1);
 	vvdouble vn = tabdatr("E-8.dat", 2);//normal energy data
@@ -72,22 +67,35 @@ int main(int argc, char const * argv[])
 	for (double beta = beta_min; beta < beta_max + del_beta; beta += del_beta)
 	{
 		mut_info = 0 ;
+		double S2AUB = 0 ;//second renyi S_2(A U B)=2ln Z[T]-ln Z[T/2]
+
+
+		double S2A = 0;//second renyi entanglement S_2(A)=2ln Z[T]-ln Z[A,2,T]
+                                    // [d.o.f of B integrated out]
+
+// I_2 (A; B) = S_2(A)+S_2(B)-S_2(A U B)=2 S_2(A)-S_2(A U B) since A & B are complemetary
+// => I_2 (A; B) = 2ln Z[T]+ln Z[T/2]-2ln Z[A,2,T]
+// ln Z[T] = - \int_0^{1/T} E_tot d(1/T) + sys_size ln 2
+
 		double term1(0), term2(0), term3(0), abs_error(0);
 		gsl_function F;
 		F.function = &f;
 		F.params = &idn;
 //Function: int gsl_integration_qags (const gsl_function * f,double a,double b, double epsabs, double epsrel,size_t limit,gsl_integration_workspace * workspace,double * result, double *abserr)
 //gsl_integration_cquad (const gsl_function * f, double a, double b, double epsabs, double epsrel, gsl_integration_cquad_workspace * workspace, double * result, double * abserr, size_t * nevals)
-		gsl_integration_cquad (&F, 0,     beta, 1e-6, 1e-4,
-		                       w, &term2, &abs_error, &nevals);
-		gsl_integration_cquad (&F, 0, 2.0*beta, 1e-6, 1e-4,
-		                       w, &term3, &abs_error, &nevals);
+		gsl_integration_cquad (&F, 0,     beta, 1e-6, 1e-4, w, &term2, &abs_error, &nevals);
+		gsl_integration_cquad (&F, 0, 2.0*beta, 1e-6, 1e-4, w, &term3, &abs_error, &nevals);
 		F.function = &g;
 		F.params = &idm;
-		gsl_integration_cquad (&F, 0, beta, 1e-6, 1e-4, w, &term1,
-		                       &abs_error, &nevals);
+		gsl_integration_cquad (&F, 0, beta, 1e-6, 1e-4, w, &term1, &abs_error, &nevals);
+
 		mut_info =2.0*term1 -2.0* term2 - term3;
-		fout << beta << '\t' << mut_info /axis2 << endl;
+
+		S2A = term1 - 2.0*term2 + 0.5*axis2*axis2*log(2);//System size N = axis1*axis2 = axis2^2
+
+                S2AUB = term3 - 2.0*term2 + axis2*axis2*log(2);
+ ;
+		fout << beta <<'\t'<< mut_info /axis2<<'\t'<<S2AUB<<'\t'<<S2A<< endl;
 	}
 
 	fout.close();

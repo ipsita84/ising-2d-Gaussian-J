@@ -49,6 +49,9 @@ echo "Computing mutual-info..."
 ${binmut} ${xmin} ${xmaxby2} ${xdel}
 echo "${binmut} done."
 
+# TO GUARANTEE SAFETY WHEN THE SCRIPT IS CALLED SEVERAL TIMES, E.G., IN A LOOP, MAKE SURE THE DIR NAMES DIFFER BY AT LEAST 2s
+sleep 2
+
 echo
 echo "All done. Bye!"
 echo "============================================================"

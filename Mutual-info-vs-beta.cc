@@ -1,6 +1,17 @@
-//  g++ -Wall -O3 `pkg-config --cflags --libs gsl tabdatrw-0.4 interp2dpp` Mutual-info-vs-beta.cc -o mi
+// g++ -Wall -O3 `pkg-config --cflags --libs gsl tabdatrw-0.3 interp2dpp` Mutual-info-vs-beta.cc -o mi
 // 2nd Renyi entropy for classical 2d Ising model in zero magnetic field
 //Metropolis algorithm employed
+//Parameters that can be changed for different runs:
+//J, axis1, axis2, N_mc
+
+// S_2 (A)= 2 ln(Z[T])-ln(Z[A,2,T])
+// S_2 (B)= 2 ln(Z[T])-ln(Z[B,2,T])
+// S_2 (A U B)= 2 ln(Z[T])-ln(Z[T/2])
+// I_2 (A; B) = S_2 (A) + S_2 (B) - S_2 (A U B) 
+// = 2 ln(Z[T])+ln(Z[T/2])-ln(Z[A,2,T])-ln(Z[B,2,T])
+// =-2\int_0^{\beta} E - \int_0^{2 \beta} E 
+//   + \int_0^{\beta} E_replica_A + \int_0^{\beta} E_replica_B
+
 
 #include <iostream>
 #include <fstream>
@@ -13,7 +24,7 @@
 #include <boost/lexical_cast.hpp>
 #include <interp2d.hpp> // For interpolation
 #include <tabdatrw.hpp> // For tabdatr and tabdatw
-
+#include <vector>
 
 // gen is a variable name
 // Its data-type is boost::random::mt19937
@@ -22,11 +33,14 @@ using namespace std;
 using boost::lexical_cast;
 using boost::bad_lexical_cast;
 
-unsigned int axis2 = 8;
+double J=1.0;
+const unsigned int axis1=8;
+const unsigned int axis2=axis1;
 
 //Function templates
 double f (double , void * params);
 double g (double , void * params);
+double h (double , void * params);
 
 int main(int argc, char const * argv[])
 {
@@ -51,12 +65,22 @@ int main(int argc, char const * argv[])
 		return 2;
 	}
 
-
+//	cout << "Enter minimum beta" << endl;
+//	cin >> beta_min;
+//	cout << "Enter maximum beta" << endl;
+//	cin >> beta_max;
+//	cout << "Enter increment of beta at each step" << endl;
+//	cin >> del_beta;
 	double mut_info(0); //mutual information I_2
-	ofstream fout("renyi-12.dat"); // Opens a file for output
-	vvdouble vm = tabdatr("Em-8.dat", 2);//modified energy data
-	interp_data idm(vm,1);
-	vvdouble vn = tabdatr("E-8.dat", 2);//normal energy data
+	ofstream fout("I2.dat"); // Opens a file for output
+
+	vvdouble vmA = tabdatr("EmA.dat", 2);//modified energy data for A
+	interp_data idmA(vmA,1);
+
+	vvdouble vmB = tabdatr("EmB.dat", 2);//modified energy data for B
+	interp_data idmB(vmB,1);
+
+	vvdouble vn = tabdatr("E.dat", 2);//normal energy data
 	interp_data idn(vn,1);
 //	gsl_integration_workspace * w
 //          = gsl_integration_workspace_alloc (1000);
@@ -67,35 +91,30 @@ int main(int argc, char const * argv[])
 	for (double beta = beta_min; beta < beta_max + del_beta; beta += del_beta)
 	{
 		mut_info = 0 ;
-		double S2AUB = 0 ;//second renyi S_2(A U B)=2ln Z[T]-ln Z[T/2]
-
-
-		double S2A = 0;//second renyi entanglement S_2(A)=2ln Z[T]-ln Z[A,2,T]
-                                    // [d.o.f of B integrated out]
-
-// I_2 (A; B) = S_2(A)+S_2(B)-S_2(A U B)=2 S_2(A)-S_2(A U B) since A & B are complemetary
-// => I_2 (A; B) = 2ln Z[T]+ln Z[T/2]-2ln Z[A,2,T]
-// ln Z[T] = - \int_0^{1/T} E_tot d(1/T) + sys_size ln 2
-
-		double term1(0), term2(0), term3(0), abs_error(0);
+		double int_E_T(0), int_E_Tby2(0),int_EA_T(0),int_EB_T(0),abs_error(0);
 		gsl_function F;
 		F.function = &f;
 		F.params = &idn;
 //Function: int gsl_integration_qags (const gsl_function * f,double a,double b, double epsabs, double epsrel,size_t limit,gsl_integration_workspace * workspace,double * result, double *abserr)
 //gsl_integration_cquad (const gsl_function * f, double a, double b, double epsabs, double epsrel, gsl_integration_cquad_workspace * workspace, double * result, double * abserr, size_t * nevals)
-		gsl_integration_cquad (&F, 0,     beta, 1e-6, 1e-4, w, &term2, &abs_error, &nevals);
-		gsl_integration_cquad (&F, 0, 2.0*beta, 1e-6, 1e-4, w, &term3, &abs_error, &nevals);
+		gsl_integration_cquad (&F, 0,     beta, 1e-6, 1e-4,
+		                       w, &int_E_T, &abs_error, &nevals);
+		gsl_integration_cquad (&F, 0, 2.0*beta, 1e-6, 1e-4,
+		                       w, &int_E_Tby2, &abs_error, &nevals);
 		F.function = &g;
-		F.params = &idm;
-		gsl_integration_cquad (&F, 0, beta, 1e-6, 1e-4, w, &term1, &abs_error, &nevals);
+		F.params = &idmA;
+		gsl_integration_cquad (&F, 0, beta, 1e-6, 1e-4, w, &int_EA_T,
+		                       &abs_error, &nevals);
 
-		mut_info =2.0*term1 -2.0* term2 - term3;
+		F.function = &h;
+		F.params = &idmB;
+		gsl_integration_cquad (&F, 0, beta, 1e-6, 1e-4, w, &int_EB_T,
+		                       &abs_error, &nevals);
+// I2 =-2\int_0^{\beta} E - \int_0^{2 \beta} E 
+//   + \int_0^{\beta} E_replica_A + \int_0^{\beta} E_replica_B
 
-		S2A = term1 - 2.0*term2 + 0.5*axis2*axis2*log(2);//System size N = axis1*axis2 = axis2^2
-
-                S2AUB = term3 - 2.0*term2 + axis2*axis2*log(2);
- ;
-		fout << beta <<'\t'<< mut_info /axis2<<'\t'<<S2AUB<<'\t'<<S2A<< endl;
+                mut_info = int_EA_T + int_EB_T -2.0*int_E_T - int_E_Tby2;
+		fout << beta << '\t' << mut_info /axis2 << endl;
 	}
 
 	fout.close();
@@ -114,6 +133,13 @@ double g (double beta, void * params)
 	interp_data p = *(interp_data *) params;
 	return p.interp_akima(beta);
 }
+
+double h (double beta, void * params)
+{
+	interp_data p = *(interp_data *) params;
+	return p.interp_akima(beta);
+}
+
 
 
 

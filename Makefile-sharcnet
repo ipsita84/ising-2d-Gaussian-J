@@ -1,5 +1,5 @@
 # Creates 4 binaries by compiling 4 different source files:
-# normal:E-vs-beta-sim-anl.cc
+# normal: E-vs-beta-sim-anl.cc
 # replicaA: EmA-vs-beta.cc
 # replicaB: EmB-vs-beta.cc
 # mutualinfo: Mutual-info-vs-beta.cc
@@ -16,24 +16,25 @@
 
 all: disorder normal replicaA replicaB mutualinfo
 
-disorder: disorder-equal-plus-minus.cc
-	g++ -Wall -O3 disorder-gauss.cc -o disorder
+CFLAGS = -I${HOME}/usr/include
+LDFLAGS = -L${HOME}/usr/lib
 
-normal: E-vs-beta-Normal.cc
-	g++ -Wall -O3 E-vs-beta-sim-anl.cc -o normal
+disorder: disorder-gauss.cc
+	icpc -Wall ${CFLAGS} ${LDFLAGS}-O3 disorder-equal-plus-minus.cc -o disorder
+
+normal: E-vs-beta-sim-anl.cc
+	icpc -Wall ${CFLAGS} ${LDFLAGS} -O3 E-vs-beta-sim-anl.cc -o normal
 	
 replicaA: EmA-vs-beta.cc
-	g++ -Wall -O3 EmB-vs-beta.cc -o replicaA
+	icpc -Wall ${CFLAGS} ${LDFLAGS} -O3 EmA-vs-beta.cc -o replicaA
 
 replicaB: EmB-vs-beta.cc
-	g++ -Wall -O3 EmA-vs-beta.cc -o replicaB
+	icpc -Wall ${CFLAGS} ${LDFLAGS} -O3 EmB-vs-beta.cc -o replicaB
 
 mutualinfo: Mutual-info-vs-beta.cc
-	g++ -Wall -O3 \
+	icpc -Wall -O3 ${CFLAGS} ${LDFLAGS} \
 	`pkg-config --cflags --libs gsl tabdatrw-0.4 interp2dpp` \
-#	g++ -Wall -O3 \
-#	`pkg-config --cflags --libs gsl tabdatrw interp2dpp` \
-#	Mutual-info-vs-beta.cc -o mutualinfo
+	Mutual-info-vs-beta.cc -o mutualinfo
 	
 .PHONY: clean
 

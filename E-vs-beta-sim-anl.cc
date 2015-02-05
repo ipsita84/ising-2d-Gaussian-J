@@ -23,6 +23,7 @@ using namespace std;
 
 typedef
 boost::multi_array < int, 2 > array_2d;
+boost::multi_array < double, 2 > array_double;
 // typedef keyword allows you to create an alias fo a data type
 
 // Magnitude of J
@@ -37,8 +38,8 @@ unsigned int N_mc = 1e6;
 //Function templates
 int roll_coin(int a, int b);
 double random_real(int a, int b);
-double energy_tot(array_2d sitespin, array_2d J_x, array_2d J_y);
-double nn_energy(array_2d sitespin,  array_2d J_x, array_2d J_y, unsigned int row, unsigned int col);
+double energy_tot(array_2d sitespin, array_double J_x, array_double J_y);
+double nn_energy(array_2d sitespin,  array_double J_x, array_double J_y, unsigned int row, unsigned int col);
 
 int main(int argc, char const * argv[])
 {
@@ -49,8 +50,8 @@ int main(int argc, char const * argv[])
 		return 1;
 	}
 
-	array_2d J_x(boost::extents[axis1][axis2]);
-	array_2d J_y(boost::extents[axis1][axis2]);
+	array_double J_x(boost::extents[axis1][axis2]);
+	array_double J_y(boost::extents[axis1][axis2]);
 	//Read the random signed bonds for a particular stored realization
 	ifstream gxin("Jx.dat");
 	ifstream gyin("Jy.dat");
@@ -194,7 +195,7 @@ double random_real(int a, int b)
 //for a given spin configuration
 //with periodic boundary conditions
 
-double energy_tot(array_2d sitespin, array_2d J_x, array_2d J_y)
+double energy_tot(array_2d sitespin, array_double J_x, array_double J_y)
 {
 	double energy = 0;
 
@@ -228,7 +229,7 @@ double energy_tot(array_2d sitespin, array_2d J_x, array_2d J_y)
 
 //Calculating interaction energy change for spin
 //at random site->(row,col) with its nearest neighbours
-double nn_energy(array_2d sitespin,  array_2d J_x, array_2d J_y, unsigned int row, unsigned int col)
+double nn_energy(array_2d sitespin,  array_double J_x, array_double J_y, unsigned int row, unsigned int col)
 {
 	double nn_en = 0;
 

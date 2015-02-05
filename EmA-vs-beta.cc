@@ -280,7 +280,7 @@ double energy_tot(array_2d sitespin, array_double J_x, array_double J_y)
 
 //Calculating interaction energy change for spin
 //at random site->(row,col) with its nearest neighbours
-double nn_energy(array_double sitespin,  array_double J_x, array_double J_y, unsigned int row, unsigned int col)
+double nn_energy(array_2d sitespin,  array_double J_x, array_double J_y, unsigned int row, unsigned int col)
 {
 	double nn_en = 0;
 

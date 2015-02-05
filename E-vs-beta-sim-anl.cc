@@ -23,6 +23,8 @@ using namespace std;
 
 typedef
 boost::multi_array < int, 2 > array_2d;
+
+typedef
 boost::multi_array < double, 2 > array_double;
 // typedef keyword allows you to create an alias fo a data type
 

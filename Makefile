@@ -16,7 +16,7 @@
 
 all: disorder normal replicaA replicaB mutualinfo
 
-disorder: disorder-equal-plus-minus.cc
+disorder: disorder-gauss.cc
 	g++ -Wall -O3 disorder-gauss.cc -o disorder
 
 normal: E-vs-beta-Normal.cc

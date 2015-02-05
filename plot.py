@@ -53,11 +53,11 @@ for filename in lof_i2:
 
 #Label the plot:
 plt.xlabel(r'$\beta$', fontsize=20)              #label for the x-axis
-plt.ylabel(r'$\langle E \rangle$', fontsize=20)  #label for the y-axis
+plt.ylabel(r'$I_{2}/8$', fontsize=20)  #label for the y-axis
 #plt.legend(prop={'size':16},loc='lower right')   #info about legend
-plt.axis([0, 0.42, plt.axis()[2], plt.axis()[3]])
+plt.axis([0, 1.5, plt.axis()[2], plt.axis()[3]])
 #Save the plot as a pdf:
-plt.savefig('I2VsBeta.pdf',bbox_inches='tight')
+plt.savefig('I2VsBeta-8.pdf',bbox_inches='tight')
 
 #Display the plot:
 plt.show()

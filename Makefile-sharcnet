@@ -20,7 +20,7 @@ CFLAGS = -I${HOME}/usr/include
 LDFLAGS = -L${HOME}/usr/lib
 
 disorder: disorder-gauss.cc
-	icpc -Wall ${CFLAGS} ${LDFLAGS}-O3 disorder-equal-plus-minus.cc -o disorder
+	icpc -Wall ${CFLAGS} ${LDFLAGS}-O3 disorder-gauss.cc -o disorder
 
 normal: E-vs-beta-sim-anl.cc
 	icpc -Wall ${CFLAGS} ${LDFLAGS} -O3 E-vs-beta-sim-anl.cc -o normal

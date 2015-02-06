@@ -8,8 +8,8 @@ xmaxby2=$(bc <<< "scale=3; ${xmax}/2")
 
 bindis=../disorder
 binnor=../normal
-binrep=../replicaA
-binrep=../replicaB
+binrepA=../replicaA
+binrepB=../replicaB
 binmut=../mutualinfo
 
 dirname=`date +%F-%H-%M-%S`
@@ -41,12 +41,12 @@ ${binnor} ${xmin} ${xmax} ${xdel}
 echo "${binnor} done."
 
 echo
-echo "Running ${binrep} from ${xmin}--${xmaxby2} with ${xdel} increments..."
+echo "Running ${binrepA} from ${xmin}--${xmaxby2} with ${xdel} increments..."
 ${binrep} ${xmin} ${xmaxby2} ${xdel}
 echo "${binrep} done."
 
 echo
-echo "Running ${binrep} from ${xmin}--${xmaxby2} with ${xdel} increments..."
+echo "Running ${binrepB} from ${xmin}--${xmaxby2} with ${xdel} increments..."
 ${binrep} ${xmin} ${xmaxby2} ${xdel}
 echo "${binrep} done."
 

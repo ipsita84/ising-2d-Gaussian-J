@@ -8,11 +8,13 @@ from math import *
 import numpy as nm
 
 edat  = 'E.dat'
-emdat = 'Em.dat'
+emadat = 'EmA.dat'
+embdat = 'EmB.dat'
 i2dat = 'I2.dat'
 
 lof_e  = list()
-lof_em = list()
+lof_ema = list()
+lof_emb = list()
 lof_i2 = list()
 
 for root, dirs, files in os.walk('./'):
@@ -21,9 +23,11 @@ for root, dirs, files in os.walk('./'):
 	for i in files:
 		fpathlist[i] = os.path.join(root, i)
 	
-	if (edat in fpathlist and emdat in fpathlist and i2dat in fpathlist):
+	if (edat in fpathlist and emadat in fpathlist and embdat in fpathlist 
+    and i2dat in fpathlist):
 		lof_e.append (fpathlist[edat] )
-		lof_em.append(fpathlist[emdat])
+		lof_ema.append(fpathlist[emadat])
+		lof_emb.append(fpathlist[embdat])
 		lof_i2.append(fpathlist[i2dat])
 
 def get_avg_arr(lof):
@@ -39,9 +43,13 @@ dat, avg = get_avg_arr(lof_e)
 res = nm.array([dat, avg])
 nm.savetxt("E-avg.dat", res.T, fmt='% .3f\t% .5E')
 
-dat, avg = get_avg_arr(lof_em)
+dat, avg = get_avg_arr(lof_ema)
 res = nm.array([dat, avg])
-nm.savetxt("Em-avg.dat", res.T, fmt='% .3f\t% .5E')
+nm.savetxt("EmA-avg.dat", res.T, fmt='% .3f\t% .5E')
+
+dat, avg = get_avg_arr(lof_emb)
+res = nm.array([dat, avg])
+nm.savetxt("EmB-avg.dat", res.T, fmt='% .3f\t% .5E')
 
 dat, avg = get_avg_arr(lof_i2)
 res = nm.array([dat, avg])

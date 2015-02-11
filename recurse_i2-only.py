@@ -22,14 +22,20 @@ for root, dirs, files in os.walk('./'):
 
 def get_avg_arr(lof):
 	dat  = nm.loadtxt(lof[0])
-	esum = nm.zeros(nm.shape(dat[:,1]))
+#	esum = nm.zeros(nm.shape(dat[:,1]))
+	col2dat = list()
 	for f in lof:
 		dat = nm.loadtxt(f)
-		esum = esum + dat[:,1]
-		esum = esum / len(lof)
-	return (dat[:,0], esum)
+		col2dat.append(dat[:,1].T)
 
+	mean = nm.mean(col2dat, axis=0, dtype=nm.float64)
+	std  = nm.std(col2dat, axis=0, dtype=nm.float64)
+	return (dat[:,0], mean, std)
 
-dat, avg = get_avg_arr(lof_i2)
-res = nm.array([dat, avg])
-nm.savetxt("I2-avg.dat", res.T, fmt='% .3f\t% .5E')
+dat, avg, std = get_avg_arr(lof_i2)
+res = nm.array([dat, avg, std])
+nm.savetxt("I2-avg.dat", res.T, fmt='% .3f\t% .5E\t% .5E',
+           header='Beta\t<I2>\tStd.dev.')
+
+print(avg)
+print(std)

@@ -24,3 +24,5 @@ Run using bash script mutualinfo.sh. For example\*
 
 \* *You might need to first make the script executable, i.e. chmod +x mutualinfo.sh*
 
+Sister directories for the same problem are at https://github.com/ipsita84/ising-2d-random-sign and
+

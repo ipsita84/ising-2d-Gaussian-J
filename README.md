@@ -15,6 +15,8 @@ Mutual-info-vs-beta.cc computes the mututal information from the date files gene
 
 The make file just runs all the codes together.
 
+It is better to modify the energy codes a bit to store the spin configuration for the latest beta, as in: https://github.com/ipsita84/bc-model/blob/master/E-print-spin.cc
+
 
 Run using bash script mutualinfo.sh. For example\*
 

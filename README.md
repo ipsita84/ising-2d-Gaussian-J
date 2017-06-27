@@ -4,6 +4,9 @@ The codes starting with "E"  basically computes the energies versus 1/temperatur
 
 
 EmB-vs-beta.cc computesthe same but for the unconstrained region B of the replica
+
+disorder-gauss.cc generates a random no. from a given gaussian distribution. This we use as the random coupling.
+
 Run using bash script mutualinfo.sh. For example\*
 
 `./mutualinfo.sh <beta_min> <beta_max> <del_beta> `

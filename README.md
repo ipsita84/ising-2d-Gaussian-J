@@ -11,6 +11,11 @@ EmB-vs-beta.cc computesthe same but for the unconstrained region B of the replic
 
 disorder-gauss.cc generates a random no. from a given gaussian distribution. This we use as the random coupling.
 
+Mutual-info-vs-beta.cc computes the mututal information from the date files generated from runing the energy codes for each temperature.
+
+The make file just runs all the codes together.
+
+
 Run using bash script mutualinfo.sh. For example\*
 
 `./mutualinfo.sh <beta_min> <beta_max> <del_beta> `
